@@ -7,7 +7,7 @@
 # below), put properly renamed versions of it into the staging directory as
 # well. Option "-g" makes the installation name non-host-specific.
 #
-# Version 2025.130
+# Version 2025.322
 # Copyright (c) 2019-2025 Günther Brunthaler. All rights reserved.
 #
 # This script is free software.
