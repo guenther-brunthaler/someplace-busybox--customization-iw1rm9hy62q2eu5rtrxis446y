@@ -51,7 +51,7 @@ Index: busybox/sysklogd/syslogd.c
  //config:config FEATURE_ROTATE_LOGFILE
  //config:	bool "Rotate message files"
  //config:	default y
-@@ -967,10 +1002,17 @@ static NOINLINE int create_socket(void)
+@@ -965,10 +1000,17 @@ static int create_socket(void)
  	memset(&sunx, 0, sizeof(sunx));
  	sunx.sun_family = AF_UNIX;
  
@@ -73,7 +73,7 @@ Index: busybox/sysklogd/syslogd.c
  	if (dev_log_name) {
  		safe_strncpy(sunx.sun_path, dev_log_name, sizeof(sunx.sun_path));
  		free(dev_log_name);
-@@ -979,7 +1021,7 @@ static NOINLINE int create_socket(void)
+@@ -977,7 +1019,7 @@ static int create_socket(void)
  
  	sock_fd = xsocket(AF_UNIX, SOCK_DGRAM, 0);
  	xbind(sock_fd, (struct sockaddr *) &sunx, sizeof(sunx));
@@ -82,7 +82,7 @@ Index: busybox/sysklogd/syslogd.c
  
  	return sock_fd;
  }
-@@ -1050,7 +1092,7 @@ static void do_syslogd(void)
+@@ -1118,7 +1160,7 @@ int syslogd_main(int argc UNUSED_PARAM,
  		sz = read(STDIN_FILENO, recvbuf, MAX_READ - 1);
  		if (sz < 0) {
  			if (!bb_got_signal)
@@ -91,7 +91,7 @@ Index: busybox/sysklogd/syslogd.c
  			break;
  		}
  
-@@ -1060,7 +1102,8 @@ static void do_syslogd(void)
+@@ -1128,7 +1170,8 @@ int syslogd_main(int argc UNUSED_PARAM,
  				goto read_again;
  			/* man 3 syslog says: "A trailing newline is added when needed".
  			 * However, neither glibc nor uclibc do this:
@@ -101,7 +101,7 @@ Index: busybox/sysklogd/syslogd.c
  			 * syslog(prio, "test\n") sends "test\n\0".
  			 * IOW: newline is passed verbatim!
  			 * I take it to mean that it's syslogd's job
-@@ -1197,3 +1240,4 @@ int syslogd_main(int argc UNUSED_PARAM,
+@@ -1204,3 +1247,4 @@ int syslogd_main(int argc UNUSED_PARAM,
  #undef OPTION_STR
  #undef OPTION_DECL
  #undef OPTION_PARAM
