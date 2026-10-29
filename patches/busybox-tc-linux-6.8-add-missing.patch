@@ -1,0 +1,70 @@
+diff --git a/networking/tc.c b/networking/tc.c
+index 3a79fd2..9a03fb5 100644
+--- a/networking/tc.c
++++ b/networking/tc.c
+@@ -61,6 +61,65 @@ enum
+ #define TCA_PRIO_MAX    (__TCA_PRIO_MAX - 1)
+ #endif
+ 
++/*
++ * Linux v6.8 removed the CBQ definitions from <linux/pkt_sched.h>
++ * (see https://git.kernel.org/linus/33241dca48626), as the CBQ qdisc
++ * itself was retired. The kernel ABI of CBQ never changed, so provide
++ * private copies of the definitions needed for printing CBQ options.
++ * This way the code builds with both old and new kernel headers.
++ */
++#ifndef TCA_CBQ_MAX
++#define TC_CBQ_MAXPRIO          8
++
++struct tc_cbq_lssopt {
++	unsigned char change;
++	unsigned char flags;
++#define TCF_CBQ_LSS_BOUNDED     1
++#define TCF_CBQ_LSS_ISOLATED    2
++	unsigned char ewma_log;
++	unsigned char level;
++	uint32_t maxidle;
++	uint32_t minidle;
++	uint32_t offtime;
++	uint32_t avpkt;
++};
++
++struct tc_cbq_wrropt {
++	unsigned char flags;
++	unsigned char priority;
++	unsigned char cpriority;
++	unsigned char __reserved;
++	uint32_t allot;
++	uint32_t weight;
++};
++
++struct tc_cbq_ovl {
++	unsigned char strategy;
++	unsigned char priority2;
++	uint16_t pad;
++	uint32_t penalty;
++};
++
++struct tc_cbq_fopt {
++	uint32_t split;
++	uint32_t defmap;
++	uint32_t defchange;
++};
++
++enum {
++	TCA_CBQ_UNSPEC,
++	TCA_CBQ_LSSOPT,
++	TCA_CBQ_WRROPT,
++	TCA_CBQ_FOPT,
++	TCA_CBQ_OVL_STRATEGY,
++	TCA_CBQ_RATE,
++	TCA_CBQ_RTAB,
++	TCA_CBQ_POLICE,
++	__TCA_CBQ_MAX
++};
++#define TCA_CBQ_MAX     (__TCA_CBQ_MAX - 1)
++#endif
++
+ #define parse_rtattr_nested(tb, max, rta) \
+ 	(parse_rtattr((tb), (max), RTA_DATA(rta), RTA_PAYLOAD(rta)))
+ 

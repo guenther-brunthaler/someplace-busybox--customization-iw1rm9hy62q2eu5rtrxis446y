@@ -3,3 +3,4 @@ busybox-reloc-inittab.patch
 busybox-reloc-syslog-socket.patch
 busybox-syslogd-alt-timestamp.patch
 busybox-patched_tag.patch
+busybox-tc-linux-6.8-add-missing.patch
